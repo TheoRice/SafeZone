@@ -1,0 +1,90 @@
+html, body { 
+	height: 100%; 
+	margin: 0; 
+	padding: 0; 
+}
+
+#map { 
+	height: 100%; 
+}
+
+#header {
+  height: 100px;
+  background-color: #F00;
+  position: fixed;
+  float: right;
+}
+
+#floating-bottom-panel {
+  position: fixed;
+  bottom: 0px;
+  /*left: 42%;*/
+  z-index: 5;
+  width:100%;
+  background-color: #ff3333;
+  padding: 10px;
+  /*border: 2px solid #fff;*/
+  /*border-radius: 3px;*/
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  text-align: center;
+  font-family: 'Roboto',Arial,'sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 5%;
+}
+
+#homButton {
+  background-color: white;
+  border-color:white;
+  border-radius: 15px;
+  color: red;
+  width: 7em;
+  height: 3em;
+  margin: 10px;
+}
+
+#robButton {
+  background-color: white;
+  border-color:white;
+  border-radius: 15px;
+  color: red;
+  width: 7em;
+  height: 3em;
+  margin: 10px;
+}
+
+#assaultButton {
+  background-color: white;
+  border-color:white;
+  border-radius: 15px;
+  color: red;
+  width: 7em;
+  height: 3em;
+  margin: 8px;
+}
+
+.controlUI {
+  margin-top: 10px;
+  background-color: #fff;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  /*width: 100%;*/
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  cursor: pointer;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.controlText {
+  color: rgb(25,25,25);
+  font-family: 'Roboto',Arial,'sans-serif';
+  font-size: 16px;
+  line-height: 38px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#map {
+  height: 92.5%;
+}

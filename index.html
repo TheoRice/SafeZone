@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="resources/main.css">
+</head>
+<body>
+
+	<div id="floating-bottom-panel">
+      <input onclick="setHomicide();" type=button value="Homicide" id="homButton">
+      <input onclick="setRobbery();" type=button value="Robbery" id="robButton">
+      <input onclick="setAssault();" type=button value="Assault" id="assaultButton">
+    </div>
+    <div id="map"></div>
+    <p>Click on the map to add markers.</p>
+	<script src="resources/main.js"></script>
+	<script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGyx-4zqnfA_VWIEbywqF19PniaKZuM2Q&callback=initMap">
+	</script>
+	</body>
+	</html>
