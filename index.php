@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="resources/main.css">
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+  <link href='https://fonts.googleapis.com/css?family=Poppins:500' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
@@ -15,13 +16,15 @@
     </div>
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
-    <p>Click on the map to add markers.</p>
+    <div id= "floating-top-panel">
+    <p>SafeZone</p>
 	<script src="resources/main.js"></script>
 
     <div id="map"></div>
 
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGyx-4zqnfA_VWIEbywqF19PniaKZuM2Q&libraries=places&signed_in=true&callback=initMap"
         async defer></script>
+      </div>
 
 	<?php
 		exec("php update.php &");
