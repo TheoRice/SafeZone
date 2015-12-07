@@ -4,9 +4,16 @@ html, body {
 	padding: 0; 
 }
 
-#map { 
-	height: 100%; 
+p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 50px;
+  color: white;
+  line-height: 0px
 }
+
+/*#map { 
+	height: 100%; 
+}*/
 
 #header {
   height: 100px;
@@ -15,7 +22,18 @@ html, body {
   float: right;
 }
 
-#floating-bottom-panel {
+#floating-top-panel{
+  position: fixed;
+  top: 0px;
+  height: 100px;
+  width: 100%;
+  background-color: #ff3333;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+}
+
+#floating-panel {
   position: fixed;
   bottom: 0px;
   /*left: 42%;*/
@@ -31,12 +49,14 @@ html, body {
   line-height: 30px;
   padding-left: 10px;
   padding-right: 10px;
-  height: 5%;
+
 }
 
 #homButton {
+  font-family: 'Poppins', sans-serif;
   background-color: white;
-  border-color:white;
+  border-color: white;
+  border-style: solid;
   border-radius: 15px;
   color: red;
   width: 7em;
@@ -45,8 +65,10 @@ html, body {
 }
 
 #robButton {
+  font-family: 'Poppins', sans-serif;
   background-color: white;
   border-color:white;
+  border-style: solid;
   border-radius: 15px;
   color: red;
   width: 7em;
@@ -55,13 +77,15 @@ html, body {
 }
 
 #assaultButton {
+  font-family: 'Poppins', sans-serif;
   background-color: white;
+  border-style: solid;
   border-color:white;
   border-radius: 15px;
   color: red;
   width: 7em;
   height: 3em;
-  margin: 8px;
+  margin: 10px;
 }
 
 .controlUI {

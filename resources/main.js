@@ -18,11 +18,11 @@ function CenterControl(controlDiv, map) {
 	controlUI.appendChild(controlText);
 
 	  // On click, the map is recentered to RPI campus and the zoom level is reset to 15.
-	controlUI.addEventListener('click', function() {
-	 	map.setCenter({lat: 42.730282, lng: -73.678717});
+	  controlUI.addEventListener('click', function() {
+	  	map.setCenter({lat: 42.730282, lng: -73.678717});
 	  	map.setZoom(15)
-	});
-}
+	  });
+	}
 
 function setHomicide() { // When the homicide button is clicked, set hom to true and everything else to false
 	hom = true;
@@ -42,70 +42,8 @@ function setAssault() {
 	rob = false;
 }
 
-function initMap() {										      // Function to initialize map
-  	map = new google.maps.Map(document.getElementById('map'), {   // Creates a new map
-    	center: {lat: 42.730282, lng: -73.678717},				  // Centers the coordinates to RPI
-   		zoom: 15										  // Zooms in close to the campus		   
-	});
-
-    // Create the DIV to hold the control and call the CenterControl() constructor
-    // passing in this DIV.
-	var centerControlDiv = document.createElement('div');
-	var centerControl = new CenterControl(centerControlDiv, map);
-	
-	centerControlDiv.index = 1;
-	map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
-
-	// This event listener calls addMarker() when the map is clicked.
-	google.maps.event.addListener(map, 'click', function(e) {
-		var marker = placeMarker(e.latLng, map);
-	});
-
-	var input = document.getElementById('pac-input');
-
-	// var autocomplete = new google.maps.places.Autocomplete(input);
-	// autocomplete.bindTo('bounds', map);
-
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-	var infowindow = new google.maps.InfoWindow();
-	var marker = new google.maps.Marker({
-	  map: map
-	});
-	marker.addListener('click', function() {
-	  infowindow.open(map, marker);
-	});
-
-	autocomplete.addListener('place_changed', function() {
-	infowindow.close();
-	var place = autocomplete.getPlace();
-	if (!place.geometry) {
-	  return;
-	}
-
-	if (place.geometry.viewport) {
-	  map.fitBounds(place.geometry.viewport);
-	} else {
-	  map.setCenter(place.geometry.location);
-	  map.setZoom(15);
-	}
-
-	// Set the position of the marker using the place ID and location.
-	marker.setPlace({
-	  placeId: place.place_id,
-	  location: place.geometry.location
-	});
-	marker.setVisible(true);
-
-	infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-	    'Place ID: ' + place.place_id + '<br>' +
-	    place.formatted_address);
-		infowindow.open(map, marker);
-	});
-}
-
 function placeMarker(position, map) {
-	var choiceURL = 'resources/markerImages/uncategorized.png'
+	var choiceURL = 'resources/markerImages/uncategorized.png';
 	var type = "uncategorized";
 	if (hom == true) {  
 		// If the user has clicked homicide, we change the marker image to the homicide png.
@@ -131,13 +69,151 @@ function placeMarker(position, map) {
 		map: map,
 		icon: iconChoice
 	}); 
+	var obj = {
+		type: type,
+		lat: position.lat(),
+		lng: position.lng()
+	};
 
 	var string = "type=" + type + "&lat=" + position.lat() + "&lng=" + position.lng();
 
 	var request = new XMLHttpRequest();
 	request.open('POST', 'update.php', false);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	// request.setRequestHeader("Content-length", string.length);
-	// request.setRequestHeader("Connection", "close");
 	request.send(string);
 }
+
+/*other code*/
+
+function initMap() {
+	var map = new google.maps.Map(document.getElementById('map'), {
+		center:{lat: 42.730282, lng: -73.678717},
+		zoom: 15
+	});
+
+	var input = document.getElementById('pac-input');
+
+	var centerControlDiv = document.createElement('div');
+	var centerControl = new CenterControl(centerControlDiv, map);
+
+	centerControlDiv.index = 1;
+	map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+	// This event listener calls addMarker() when the map is clicked.
+	google.maps.event.addListener(map, 'click', function(e) {
+		var marker = placeMarker(e.latLng, map);
+	});
+
+	var autocomplete = new google.maps.places.Autocomplete(input);
+	autocomplete.bindTo('bounds', map);
+
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+	var infowindow = new google.maps.InfoWindow();
+	var marker = new google.maps.Marker({
+		map: map
+	});
+	marker.addListener('click', function() {
+		infowindow.open(map, marker);
+	});
+
+	autocomplete.addListener('place_changed', function() {
+	infowindow.close();
+	var place = autocomplete.getPlace();
+	if (!place.geometry) {
+		return;
+	}
+
+	if (place.geometry.viewport) {
+		map.fitBounds(place.geometry.viewport);
+	} else {
+		map.setCenter(place.geometry.location);
+		map.setZoom(17);
+	}
+
+    // Set the position of the marker using the place ID and location.
+    marker.setPlace({
+    	placeId: place.place_id,
+    	location: place.geometry.location
+    });
+    marker.setVisible(true);
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+    	'Place ID: ' + place.place_id + '<br>' +
+    	place.formatted_address);
+    infowindow.open(map, marker);
+});
+	}
+
+// displays an address form, using the autocomplete feature
+// of the Google Places API to help users fill in the information.
+
+var placeSearch, autocomplete;
+var componentForm = {
+	street_number: 'short_name',
+	route: 'long_name',
+	locality: 'long_name',
+	administrative_area_level_1: 'short_name',
+	country: 'long_name',
+	postal_code: 'short_name'
+};
+
+function initAutocomplete() {
+  // Create the autocomplete object, restricting the search to geographical
+  // location types.
+  autocomplete = new google.maps.places.Autocomplete(
+  	/** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+  	{types: ['geocode']});
+
+  // When the user selects an address from the dropdown, populate the address
+  // fields in the form.
+  autocomplete.addListener('place_changed', fillInAddress);
+}
+
+// [START region_fillform]
+function fillInAddress() {
+  // Get the place details from the autocomplete object.
+  var place = autocomplete.getPlace();
+
+  for (var component in componentForm) {
+  	document.getElementById(component).value = '';
+  	document.getElementById(component).disabled = false;
+  }
+
+  // Get each component of the address from the place details
+  // and fill the corresponding field on the form.
+  for (var i = 0; i < place.address_components.length; i++) {
+  	var addressType = place.address_components[i].types[0];
+  	if (componentForm[addressType]) {
+  		var val = place.address_components[i][componentForm[addressType]];
+  		document.getElementById(addressType).value = val;
+  	}
+  }
+}
+// [END region_fillform]
+
+// [START region_geolocation]
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var geolocation = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			var circle = new google.maps.Circle({
+				center: geolocation,
+				radius: position.coords.accuracy
+			});
+			autocomplete.setBounds(circle.getBounds());
+		});
+	}
+}
+// [END region_geolocation]
+
+
+
+
+
+
