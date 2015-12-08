@@ -2,6 +2,7 @@ html, body {
   height: 100%; 
   margin: 0; 
   padding: 0; 
+  overflow: hidden;
 }
 
 p {
@@ -11,18 +12,8 @@ p {
   line-height: 0px
 }
 
-/*#map { 
-  height: 100%; 
-}*/
-
-#header {
-  height: 100px;
-  background-color: #F00;
-  position: fixed;
-  float: right;
-}
-
-#floating-top-panel{
+#floating-top-panel {
+  z-index: 1;
   position: fixed;
   top: 0px;
   height: 100px;
@@ -36,20 +27,20 @@ p {
 #floating-panel {
   position: fixed;
   bottom: 0px;
-  /*left: 42%;*/
-  z-index: 5;
+  z-index: 1;
   width:100%;
+  height: 75px;
   background-color: #ff3333;
-  padding: 10px;
-  /*border: 2px solid #fff;*/
-  /*border-radius: 3px;*/
   box-shadow: 0 2px 6px rgba(0,0,0,.3);
   text-align: center;
-  font-family: 'Roboto',Arial,'sans-serif';
+  font-family: 'Roboto', Arial,'sans-serif';
   line-height: 30px;
   padding-left: 10px;
   padding-right: 10px;
-
+  margin-top: 50%;
+  overflow: hidden;
+  margin-bottom: 0;
+  vertical-align: middle;
 }
 
 #homButton {
@@ -89,11 +80,10 @@ p {
 }
 
 .controlUI {
-  margin-top: 10px;
+  margin-top: 5px;
   background-color: #fff;
   border: 2px solid #fff;
   border-radius: 3px;
-  /*width: 100%;*/
   box-shadow: 0 2px 6px rgba(0,0,0,.3);
   cursor: pointer;
   margin-bottom: 22px;
@@ -102,7 +92,7 @@ p {
 
 .controlText {
   color: rgb(25,25,25);
-  font-family: 'Roboto',Arial,'sans-serif';
+  font-family: 'Roboto', Arial, 'sans-serif';
   font-size: 16px;
   line-height: 38px;
   padding-left: 5px;
@@ -110,5 +100,40 @@ p {
 }
 
 #map {
-  height: 92.5%;
+  margin-top: 100px;
+  clear: both;
+  height: calc(100% - 175px);
+  margin-bottom: 100px;
+}
+
+#pac-input {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+
+#pac-input:focus {
+  border-color: #4d90fe;
+}
+
+.pac-container {
+  font-family: Roboto;
+}
+
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#format {
+  float: left;
 }

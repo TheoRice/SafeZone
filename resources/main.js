@@ -3,6 +3,32 @@ var hom = false;
 var rob = false;
 var assault = false;
 
+var keysToScroll = {37: 1, 38: 1, 39: 1, 40: 1, 32: 1};
+
+function preventDefault(e) {
+  e = e || window.event;
+  if (e.preventDefault)
+      e.preventDefault();
+  e.returnValue = false;  
+}
+
+function preventDefaultForScrollKeys(e) {
+    if (keysToScroll[e.keyCode]) {
+        preventDefault(e);
+        return false;
+    }
+}
+
+function disableScroll() {
+  if (window.addEventListener) {// older FF
+    	window.addEventListener('DOMMouseScroll', preventDefault, false);
+  		window.onwheel = preventDefault; // modern standard
+  		window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
+  		window.ontouchmove  = preventDefault; // mobile
+  		document.onkeydown  = preventDefaultForScrollKeys;
+  	}
+}	
+
 function CenterControl(controlDiv, map) {
 
 	// Set CSS for the control border.
@@ -18,33 +44,137 @@ function CenterControl(controlDiv, map) {
 	controlUI.appendChild(controlText);
 
 	  // On click, the map is recentered to RPI campus and the zoom level is reset to 15.
-	  controlUI.addEventListener('click', function() {
-	  	map.setCenter({lat: 42.730282, lng: -73.678717});
-	  	map.setZoom(15)
-	  });
-	}
+    controlUI.addEventListener('click', function() {
+    	map.setCenter({lat: 42.730282, lng: -73.678717});
+    	map.setZoom(15)
+    });
+}
+
+function setColor(id) {
+	var myElement = document.querySelector(id);
+	myElement.style.backgroundColor = "red";
+	myElement.style.color = "white"
+}
+
+function removeColor(id) {
+	var myElement = document.querySelector(id);
+	myElement.style.backgroundColor = "white";
+	myElement.style.color = "red";
+}
 
 function setHomicide() { // When the homicide button is clicked, set hom to true and everything else to false
-	hom = true;
-	rob = false;
-	assault = false;
+	if (hom == false) {
+		hom = true;
+		rob = false;
+		assault = false;
+		setColor("#homButton");
+		removeColor("#robButton");
+		removeColor("#assaultButton");
+	}
+	else {
+		hom = false;
+		removeColor("#homButton");
+	}
 }
 
 function setRobbery() { // When the robbery button is clicked, set rob to true and everything else to false
-	rob = true;
-	hom = false;
-	assault = false;
+	if (rob == false) {
+		rob = true;
+		hom = false;
+		assault = false;
+		setColor("#robButton");
+		removeColor("#homButton");
+		removeColor("#assaultButton");
+	}
+	else if (rob == true) {
+		rob = false;
+		removeColor("#robButton");
+	}
 }
 
 function setAssault() {
-	assault = true;
-	hom = false;
-	rob = false;
+	if (assault == false) {
+		assault = true;
+		hom = false;
+		rob = false;
+		setColor("#assaultButton");
+		removeColor("#robButton");
+		removeColor("#homButton");
+	}
+	else {
+		assault = false;
+		removeColor("#assaultButton");
+	}
+}
+
+function xmlToJson(xml) {
+	
+	// Create the return object
+	var obj = {};
+
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+};
+
+function placeMarkerWithType(latitude, longitude, map, type) {
+	var position = {lat: latitude, lng: longitude};
+	var choiceURL;
+	if (type == "homicide") {  
+		// If the user has clicked homicide, we change the marker image to the homicide png.
+		choiceURL = 'resources/markerImages/homicide.png';
+	}
+	else if (type == "assault") {
+		// If the user has clicked robbery, we change the marker image to the robbery png.
+		choiceURL = 'resources/markerImages/assault.png';
+	}
+	else if (type == "robbery") {
+		// If the user has clicked assault, we change the marker image to the assault png.
+		choiceURL = 'resources/markerImages/robbery.png';
+	}
+	var iconChoice = {
+		url: choiceURL
+	}
+	var marker = new google.maps.Marker({
+		position: position,
+		map: map,
+		icon: iconChoice
+	}); 
 }
 
 function placeMarker(position, map) {
-	var choiceURL = 'resources/markerImages/uncategorized.png';
-	var type = "uncategorized";
+	if (hom == false && rob == false && assault == false) {
+		return;
+	}
+	var choiceURL;
 	if (hom == true) {  
 		// If the user has clicked homicide, we change the marker image to the homicide png.
 		choiceURL = 'resources/markerImages/homicide.png';
@@ -83,13 +213,33 @@ function placeMarker(position, map) {
 	request.send(string);
 }
 
-/*other code*/
-
 function initMap() {
 	var map = new google.maps.Map(document.getElementById('map'), {
 		center:{lat: 42.730282, lng: -73.678717},
 		zoom: 15
 	});
+
+	var request = new XMLHttpRequest();
+    request.open('GET', 'getReleMarkers.php', false);
+    request.send();
+
+    var domparser = new DOMParser();
+    var fromString = domparser.parseFromString(request.responseText,"text/xml");
+    console.log(fromString);
+    var parsedResponse = xmlToJson(fromString);
+
+    var m;
+    console.log(parsedResponse["markers"]["marker"]);
+    if (parsedResponse["markers"]["marker"] instanceof Array) {
+    	for (var i = 0; i < parsedResponse["markers"]["marker"].length; i++) { 
+			m = parsedResponse["markers"]["marker"][i];
+			placeMarkerWithType(Number(m["lat"]["#text"]), Number(m["lng"]["#text"]), map, m["type"]["#text"]);
+		}
+    }
+    else if (parsedResponse["markers"]["marker"] instanceof Object) {
+    	m = parsedResponse["markers"]["marker"];
+		placeMarkerWithType(Number(m["lat"]["#text"]), Number(m["lng"]["#text"]), map, m["type"]["#text"]);
+    }
 
 	var input = document.getElementById('pac-input');
 
@@ -109,41 +259,23 @@ function initMap() {
 
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-	var infowindow = new google.maps.InfoWindow();
-	var marker = new google.maps.Marker({
-		map: map
-	});
-	marker.addListener('click', function() {
-		infowindow.open(map, marker);
-	});
-
 	autocomplete.addListener('place_changed', function() {
-	infowindow.close();
-	var place = autocomplete.getPlace();
-	if (!place.geometry) {
-		return;
-	}
+		infowindow.close();
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+			return;
+		}
 
-	if (place.geometry.viewport) {
-		map.fitBounds(place.geometry.viewport);
-	} else {
-		map.setCenter(place.geometry.location);
-		map.setZoom(17);
-	}
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(15);
+		}
 
-    // Set the position of the marker using the place ID and location.
-    marker.setPlace({
-    	placeId: place.place_id,
-    	location: place.geometry.location
-    });
-    marker.setVisible(true);
-
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-    	'Place ID: ' + place.place_id + '<br>' +
-    	place.formatted_address);
-    infowindow.open(map, marker);
-});
-	}
+		placeMarker(place.geometry.location, map);
+	});
+}
 
 // displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
@@ -159,20 +291,11 @@ var componentForm = {
 };
 
 function initAutocomplete() {
-  // Create the autocomplete object, restricting the search to geographical
-  // location types.
-  autocomplete = new google.maps.places.Autocomplete(
-  	/** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
-  	{types: ['geocode']});
-
-  // When the user selects an address from the dropdown, populate the address
-  // fields in the form.
+  autocomplete = new google.maps.places.Autocomplete((document.getElementById('autocomplete')),{types: ['geocode']});
   autocomplete.addListener('place_changed', fillInAddress);
 }
 
-// [START region_fillform]
 function fillInAddress() {
-  // Get the place details from the autocomplete object.
   var place = autocomplete.getPlace();
 
   for (var component in componentForm) {
@@ -180,8 +303,6 @@ function fillInAddress() {
   	document.getElementById(component).disabled = false;
   }
 
-  // Get each component of the address from the place details
-  // and fill the corresponding field on the form.
   for (var i = 0; i < place.address_components.length; i++) {
   	var addressType = place.address_components[i].types[0];
   	if (componentForm[addressType]) {
@@ -190,11 +311,7 @@ function fillInAddress() {
   	}
   }
 }
-// [END region_fillform]
 
-// [START region_geolocation]
-// Bias the autocomplete object to the user's geographical location,
-// as supplied by the browser's 'navigator.geolocation' object.
 function geolocate() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
@@ -210,5 +327,4 @@ function geolocate() {
 		});
 	}
 }
-// [END region_geolocation]
 
