@@ -1,6 +1,5 @@
 <?php
 
-
     include "mysqllib.php";
     class SQLLib{
         
@@ -31,8 +30,6 @@
         function getTableList(){
             return $this->sqlObj->getTableList();
         }
-        
     }
-
 
 ?>
