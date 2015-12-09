@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-  <head>
-    <title>SafeZone - RPI</title>
-  	<link rel="stylesheet" type="text/css" href="resources/main.css">
-    <script src="resources/main.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGyx-4zqnfA_VWIEbywqF19PniaKZuM2Q&libraries=places&signed_in=false&callback=initMap"
-      async defer></script>
-  </head>
-  <body>
+	<head>
+		
+		<title>SafeZone - RPI</title>
+		<link rel="stylesheet" type="text/css" href="resources/main.css">
+		<script src="resources/main.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGyx-4zqnfA_VWIEbywqF19PniaKZuM2Q&libraries=places&signed_in=false&callback=initMap" async defer></script>
+		
+	</head>
+	<body>
 
-  	</div id="format">
-      <div id="floating-top-panel">
-        <p>SafeZone<p>
-      </div>
-      <div id="floating-panel">
-        <input onclick="setHomicide();" type=button value="Homicide" id="homButton">
-        <input onclick="setRobbery();" type=button value="Robbery" id="robButton">
-        <input onclick="setAssault();" type=button value="Assault" id="assaultButton">
-      </div>
-      <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
-      <div id="map"></div>
-    </div>
-
-
+		</div id="format">
+			<div id="floating-top-panel">
+				<p>SafeZone<p>
+			</div>
+			<div id="floating-panel">
+				<input onclick="setHomicide();" type=button value="Homicide" id="homButton">
+				<input onclick="setRobbery();" type=button value="Robbery" id="robButton">
+				<input onclick="setAssault();" type=button value="Assault" id="assaultButton">
+			</div>
+			<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+			<div id="map"></div>
+		</div>
+    	
 	</body>
 </html>
