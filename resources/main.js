@@ -6,31 +6,31 @@ var assault = false;
 var keysToScroll = {37: 1, 38: 1, 39: 1, 40: 1, 32: 1};
 
 function preventDefault(e) {
-  e = e || window.event;
-  if (e.preventDefault)
-      e.preventDefault();
-  e.returnValue = false;  
+	e = e || window.event;
+	if (e.preventDefault) {
+		e.preventDefault();
+	}
+	e.returnValue = false;  
 }
 
 function preventDefaultForScrollKeys(e) {
-    if (keysToScroll[e.keyCode]) {
-        preventDefault(e);
-        return false;
-    }
+	if (keysToScroll[e.keyCode]) {
+		preventDefault(e);
+		return false;
+	}
 }
 
 function disableScroll() {
-  if (window.addEventListener) {// older FF
-    	window.addEventListener('DOMMouseScroll', preventDefault, false);
-  		window.onwheel = preventDefault; // modern standard
-  		window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
-  		window.ontouchmove  = preventDefault; // mobile
-  		document.onkeydown  = preventDefaultForScrollKeys;
-  	}
+	if (window.addEventListener) {// older FF
+		window.addEventListener('DOMMouseScroll', preventDefault, false);
+		window.onwheel = preventDefault; // modern standard
+		window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
+		window.ontouchmove  = preventDefault; // mobile
+		document.onkeydown  = preventDefaultForScrollKeys;
+	}
 }	
 
 function CenterControl(controlDiv, map) {
-
 	// Set CSS for the control border.
 	var controlUI = document.createElement('div');
 	controlUI.className = controlUI.className + "controlUI";
@@ -44,7 +44,7 @@ function CenterControl(controlDiv, map) {
 	controlUI.appendChild(controlText);
 
 	  // On click, the map is recentered to RPI campus and the zoom level is reset to 15.
-    controlUI.addEventListener('click', function() {
+	controlUI.addEventListener('click', function() {
     	map.setCenter({lat: 42.730282, lng: -73.678717});
     	map.setZoom(15)
     });
@@ -108,7 +108,6 @@ function setAssault() {
 }
 
 function xmlToJson(xml) {
-	
 	// Create the return object
 	var obj = {};
 
@@ -220,26 +219,24 @@ function initMap() {
 	});
 
 	var request = new XMLHttpRequest();
-    request.open('GET', 'getReleMarkers.php', false);
-    request.send();
+	request.open('GET', 'getReleMarkers.php', false);
+	request.send();
 
-    var domparser = new DOMParser();
-    var fromString = domparser.parseFromString(request.responseText,"text/xml");
-    console.log(fromString);
-    var parsedResponse = xmlToJson(fromString);
+	var domparser = new DOMParser();
+	var fromString = domparser.parseFromString(request.responseText,"text/xml");
+	var parsedResponse = xmlToJson(fromString);
 
-    var m;
-    console.log(parsedResponse["markers"]["marker"]);
-    if (parsedResponse["markers"]["marker"] instanceof Array) {
-    	for (var i = 0; i < parsedResponse["markers"]["marker"].length; i++) { 
+	var m;
+	if (parsedResponse["markers"]["marker"] instanceof Array) {
+		for (var i = 0; i < parsedResponse["markers"]["marker"].length; i++) { 
 			m = parsedResponse["markers"]["marker"][i];
 			placeMarkerWithType(Number(m["lat"]["#text"]), Number(m["lng"]["#text"]), map, m["type"]["#text"]);
 		}
-    }
-    else if (parsedResponse["markers"]["marker"] instanceof Object) {
-    	m = parsedResponse["markers"]["marker"];
+	}
+	else if (parsedResponse["markers"]["marker"] instanceof Object) {
+		m = parsedResponse["markers"]["marker"];
 		placeMarkerWithType(Number(m["lat"]["#text"]), Number(m["lng"]["#text"]), map, m["type"]["#text"]);
-    }
+	}
 
 	var input = document.getElementById('pac-input');
 
@@ -295,20 +292,20 @@ function initAutocomplete() {
 }
 
 function fillInAddress() {
-  var place = autocomplete.getPlace();
+	var place = autocomplete.getPlace();
 
-  for (var component in componentForm) {
-  	document.getElementById(component).value = '';
-  	document.getElementById(component).disabled = false;
-  }
-
-  for (var i = 0; i < place.address_components.length; i++) {
-  	var addressType = place.address_components[i].types[0];
-  	if (componentForm[addressType]) {
-  		var val = place.address_components[i][componentForm[addressType]];
-  		document.getElementById(addressType).value = val;
+	for (var component in componentForm) {
+		document.getElementById(component).value = '';
+		document.getElementById(component).disabled = false;
   	}
-  }
+
+	for (var i = 0; i < place.address_components.length; i++) {
+		var addressType = place.address_components[i].types[0];
+		if (componentForm[addressType]) {
+			var val = place.address_components[i][componentForm[addressType]];
+			document.getElementById(addressType).value = val;
+		}
+	}
 }
 
 function geolocate() {
