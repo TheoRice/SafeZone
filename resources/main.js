@@ -260,7 +260,6 @@ function initMap() {
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
 	autocomplete.addListener('place_changed', function() {
-		infowindow.close();
 		var place = autocomplete.getPlace();
 		if (!place.geometry) {
 			return;
