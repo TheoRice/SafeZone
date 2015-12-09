@@ -1,8 +1,8 @@
 <?php
+
 	include 'datalibrary.php';
 
 	$db = new Data();
-
 	$xml = new SimpleXMLElement("<markers/>");
 	$markers = array();
 	$markers = $db->getReleMarkers();
@@ -12,8 +12,6 @@
 			$marxml->addChild($key, $value);
 		}
 	}
-
-
 	echo preg_replace('/^.+\n/', '', $xml->asXML());
 
 ?>
