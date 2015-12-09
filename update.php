@@ -1,5 +1,4 @@
 <?php
-
 	include "datalibrary.php";
 
 	$db = new Data();
