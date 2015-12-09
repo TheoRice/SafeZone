@@ -1,63 +1,62 @@
 <!DOCTYPE html>
-  <head>
-    <title>SafeZone</title>
-    <link rel="stylesheet" type="text/css" href="resources/login.css">
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-  	<div id="loginbox">
-		<form name="login" action="#" onsubmit="check(this.form);">
-			<h1>SafeZone</h1>
-			<h2>Username:  <input type="text" name="userid"/>  </h2>
-			<h2>Password:  <input type="password" name="pswrd" onkeypress="key(event, this.form)"/></h2>
-			<input type="button" onclick="check(this.form)" value="Login" id="login"/>
-		</form>
-	</div>
+	<head>
+		<title>SafeZone</title>
+		<link rel="stylesheet" type="text/css" href="resources/login.css">
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGyx-4zqnfA_VWIEbywqF19PniaKZuM2Q&callback=initMap" async defer></script>
+		<meta name="viewport" content="initial-scale=1.0">
+		<meta charset="utf-8">
+		<style>
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			#map {
+				height: 100%;
+			}
+		</style>
+	</head>
+	
+	<body>
+		
+		<div id="loginbox">
+			<form name="login" action="#" onsubmit="check(this.form);">
+				<h1>SafeZone</h1>
+				<h2>Username:  <input type="text" name="userid"/>  </h2>
+				<h2>Password:  <input type="password" name="pswrd" onkeypress="key(event, this.form)"/></h2>
+				<input type="button" onclick="check(this.form)" value="Login" id="login"/>
+			</form>
+		</div>
 		<script language="javascript">
 			function key(e, form) {
-        		if(e.keyCode === 13){
-            		check(form);
-            	}
-        		return false;
+				if(e.keyCode === 13){
+					check(form);
+				}
+			return false;
 			}
-
+	
 			function check(form) {/*function to check userid & password*/
 			 /*checks whether the entered userid and password are matching*/
 				if (form.userid.value == "RIN" && form.pswrd.value == "password") {
-		    		window.location.assign('map.html')/*opens the target page while Id & password matches*/
-		  		}
-		 		else {
-		   			alert("Incorrect username or password")/*displays error message*/
-		  		}
+					window.location.assign('map.html')/*opens the target page while Id & password matches*/
+				}
+				else {
+					alert("Incorrect username or password")/*displays error message*/
+				}
 			}
 		</script> 
-	    <div id="map"></div>
-	    <script>
-
-		var map;
-		function initMap() {
-		  map = new google.maps.Map(document.getElementById('map'), {
-		    center: {lat: 42.730282, lng: -73.678717},
-		    zoom: 15,
-		    disableDefaultUI: true,
-		    disableDoubleClickZoom: true,
-		    draggable: false
-		  });
-		}
-
-	    </script>
-    <!-- </div> -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGyx-4zqnfA_VWIEbywqF19PniaKZuM2Q&callback=initMap" async defer></script>
-  </body>
+		<div id="map"></div>
+		<script>
+			var map;
+			function initMap() {
+				map = new google.maps.Map(document.getElementById('map'), {
+					center: {lat: 42.730282, lng: -73.678717},
+					zoom: 15,
+					disableDefaultUI: true,
+					disableDoubleClickZoom: true,
+					draggable: false
+				});
+			}
+		</script>
+	</body>
 </html>
