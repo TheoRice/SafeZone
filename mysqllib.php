@@ -1,6 +1,5 @@
 <?php
 
-
     class MySQLLib{
         
         private static $assoc_table = array('both' => MYSQLI_BOTH, 'assoc' => MYSQLI_ASSOC, 'num' => MYSQLI_NUM);
@@ -19,8 +18,6 @@
             if($this->connection->connect_errno){
                 echo "Database Connectivity Error: " . $this->connection->connect_errno;
             }
-            
-            
         }
         
         function __destruct(){
@@ -47,7 +44,6 @@
             }else{
                 return $result->fetch_array(MySQLLib::$assoc_table[$assoc]);
             }
-             
         }
         
         function getColumnList($tblName){
@@ -68,11 +64,6 @@
             }
             return $tblNames;
         }
-        
-        
     }
-    
-    
-
 
 ?>
