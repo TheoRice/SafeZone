@@ -53,6 +53,13 @@ p {
   cursor: default;
 }
 
+#floating-panel * {
+  top: 15%;
+  vertical-align: middle;
+  position: relative;
+  cursor: pointer;
+}
+
 #homButton {
   font-family: 'Poppins', sans-serif;
   background-color: white;
@@ -107,6 +114,10 @@ p {
   line-height: 38px;
   padding-left: 5px;
   padding-right: 5px;
+  -webkit-user-select: none; /* Chrome/Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #map {
