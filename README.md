@@ -1,5 +1,7 @@
 # SafeZone
 
+## In order to work without connection to database, comment out lines 221-239 in main.js
+
 #### To Do: 
 * Integrate bootstrap/jquery to front end
 * Add a login system using facebook API (to check for rpi.edu address)
